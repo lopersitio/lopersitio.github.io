@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport'/>
+				<meta charset="UTF-8">
+				<title>WebApps</title>
+<style>
+ html,body,.full{width:100%; height:100%;float:left;overflow:auto;font-size:19px} *{transition:0ms;box-sizing:border-box; margin:0px; padding:0px; overflow:auto;}
+#conf{width:90%;max-width:400px;border-radius:3px;display:none;max-height:90%;box-shadow:0px 0px 90px #000;font-size:18px;font-weight:300;padding:5px;background:#fff;position:absolute;top:5%;left:5%;z-index:20}
+#conf div.txt{max-height:500px;padding:20px;overflow:auto;}
+#conf div.btn input{width:50%;font-size:20px;float:left}
+#conf .btn{padding:4px}
+</style>
+</head>
+<body>
+ <div id="conf"></div>
+ <div class="full" id="pc">
+   <div class="elem full" style="float:left"><p class="elem" style="width: 100%; float: left; padding: 15px; font-weight: 200; font-size: 2em;">cargando...</p></div> 
+ </div>
+
+<script> if(localStorage.pc==undefined){localStorage.pc=JSON.stringify([0,0])}
+errorWeb=`<div class="elem full" id="blok" style="text-align: center;"><div class="elem" style="width: 100%; min-height: 15px; height: 130px; float: left;"></div><p class="elem" style="width: 100%; float: left; text-align: center; font-size: 2.5em; font-weight: 800;">Upss</p><p class="elem" style="width: 100%; float: left; text-align: center; font-size: 1.3em; font-weight: 200; padding: 1px 10px;">No se ha podido conectar al servidor </p><img src="https://t1.uc.ltmcdn.com/es/posts/5/4/9/como_compartir_varios_links_en_un_solo_enlace_19945_600.jpg" class="elem" style="width: 20%; margin: 5%;"></div>`
+app='edipaplus'
+
+ 
+ url=[];
+ if((document.location.href).indexOf('?')>0){
+  uri=(document.location.href).split('?')[1];
+  url=uri.split('&')
+ }
+   site='MTAyNzg4OTY1OTk2NzE5MzA4OA=='
+   bit2="aHR0cHM6Ly9qc29uYmxvYi5jb20vYXBpL2pzb25CbG9iLw=="
+  if(url[0]!=undefined){caso=url[0]}else{caso=site}
+   var xhr = new XMLHttpRequest();xhr.open("GET", atob(bit2)+atob(caso));
+   xhr.setRequestHeader("Content-type", "application/json");
+   xhr.onreadystatechange = function(){ if(xhr.readyState == 4){ if(xhr.responseText!=''){
+     cont=xhr.responseText
+  if(cont==`{"message":"Blob with id ${caso} does not exist","_links":{"self":{"href":"/api/jsonBlob/${caso}","templated":false}}}`){cont=errorWeb}
+     pc.innerHTML=cont
+     localStorage.pc= JSON.stringify([caso,cont])
+  }else{
+  alerta('No internet');
+  pc.innerHTML=errorWeb
+  if(JSON.parse(localStorage.pc)[0]==caso){confirma('No se pudo conectar quiere ver su copia en caché','pc.innerHTML=JSON.parse(localStorage.pc)[1]','')} }}};
+  xhr.send();
+  
+ 
+
+
+function alerta(texto){
+conf.style.display='inline'
+conf.innerHTML=`<b>${app}</b><hr/><div class="txt">${texto}</div> <div class="btn"><input onclick="conf.style.display='none'" value="Acectar" type="button"></div>`
+}
+function confirma(texto,ac,ca){
+conf.style.display='inline'
+conf.innerHTML=`<b>${app}</b><hr/><div class="txt">${texto}</div>  
+<div class="btn"> <input onclick="conf.style.display='none';${ac}" value="Acectar" type="button">  <input onclick="conf.style.display='none';${ca}" value="Cancelar" type="button"></div>`}
+
+
+</script>
+</body>
+</html>
